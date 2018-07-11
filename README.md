@@ -2,22 +2,25 @@
 
 使用 docker-compose 加速构建你的PHP环境.
 
----- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
+----- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
 
 ## 安装 docker
 
-From repository  
-    `wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh`  
-    https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
+From repository
+```
+wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
+```
+https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
 
-Or from package  
-    https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
+Or from package
+
+https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
 
 
 ## 安装 docker-compose
 
-    https://docs.docker.com/compose/install/#install-compose
+https://docs.docker.com/compose/install/#install-compose
 
 
 ## 几个平常可能使用的脚本
@@ -45,15 +48,15 @@ docker-compose up --build [-d]
 
 ### 解决Redis的四个WARNING
 
-1. no config file specified, using the default config.
+1.no config file specified, using the default config.
 
 默认已通过在 `docker-compose.yml` 中配置 volume 使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README.md，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
 
-2. The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+2.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
 
 默认已通过在 `docker-compose.yml` 中配置 sysctls 的选项解除了 WARNING。
 
-3. vm.overcommit_memory is set to 0!
+3.vm.overcommit_memory is set to 0!
 
 需要你切换至 root，然后按如下设置：
 ```
@@ -61,7 +64,7 @@ $ echo vm.overcommit_memory = 1 >> /etc/sysctl.conf
 $ sysctl vm.overcommit_memory=1
 ```
 
-4. you have Transparent Huge Pages (THP) support enabled in your kernel.
+4.you have Transparent Huge Pages (THP) support enabled in your kernel.
 
 需要你切换至 root，然后按如下设置：
 ```
