@@ -1,6 +1,6 @@
 # dkc
 
-使用 docker-compose 加速构建你的PHP环境.
+用 docker-compose 加速构建PHP环境.
 
 ----- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
