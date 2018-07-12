@@ -7,18 +7,23 @@
 
 ## 安装 docker
 
-From repository
+从 repository 安装
 ```
-wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
+$ wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
 ```
 https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
 
-Or from package
+或者下载 package 安装
 
 https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
 
 
 ## 安装 docker-compose
+
+```
+$ sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+```
 
 https://docs.docker.com/compose/install/#install-compose
 
@@ -34,6 +39,8 @@ https://docs.docker.com/compose/install/#install-compose
 ## 网站项目目录
 
 默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后你可以放置在任何地方。
+
+当然使用软链接也是可以的，把 `web/` 链向实际项目目录。
 
 
 ## 指南
