@@ -140,15 +140,17 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 如果启动MySQL容器时带上一个包含数据库的目录，$MYSQL_ROOT_PASSWORD 变量不应该放在命令行中；在任何项目中都该忽略此变量，然后已存在的数据库不会以任何方式改变。
 ```
 
-### 重要概念
-
-Image and Container, Volume, Network
-
-移除所有未使用的 volume：`docker volume prune`
 
 ### 使用 COPY 还是 VOLUME
 
 VOLUME 是支持热重载的，而 COPY 需要重新 build。
 
 VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
+
+移除所有未使用的 volume：`docker volume prune`
+
+
+### 系列文章
+
+http://www.cnblogs.com/farwish/tag/Docker/
 
