@@ -23,3 +23,10 @@ RUN apt-get update && apt-get install -y \
 
 #COPY php.ini /usr/local/etc/php/
 
+#COPY --from=composer:1.5 /usr/bin/composer /usr/bin/composer
+
+#WORKDIR /usr/share/nginx/html/so-fw
+
+#CMD ["composer", "install"]
+
+#CMD ["mkdir", "-p", "-m", "0777", "var/"]

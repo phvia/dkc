@@ -34,14 +34,14 @@ https://docs.docker.com/compose/install/#install-compose
 
 默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。
 
-当然使用软链接链向实际项目目录也是可以的，比如 `cd /path/to/dkc && ln -s ../so-fw/ web/so-fw`。
+可以拷贝项目目录到 `web/` 中。
 
 
 ## <指南>
 
 ### 如何启动所有服务
 
-修改 `docker-composer.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
+修改 `docker-compose.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
 ```
 dkc up --build [-d]
 ```
@@ -146,7 +146,17 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 
 ### Composer 服务
 
-依赖 PHP 服务。composer 的作用是安装 PHP 项目中的第三方库。
+composer 的作用是安装 PHP 项目中的第三方库，注意修改 volumes 项目目录和 working_dir 。
+
+```
+# 查看日志
+
+$ dkc logs -f --tail 20 composer
+
+# 查看运行状态，最终 composer 为 Exit 0 表示运行完毕
+
+$ dkc ps
+```
 
 更多内容见 `composer/Dockerfile`。
 
