@@ -8,3 +8,9 @@
 ```
 curl -sS https://raw.githubusercontent.com/php/php-src/php-7.1.19/php.ini-production -o php.ini
 ```
+
+当前项目中 `php.ini` 修改的配置项有:
+
+```
+expose_php = Off
+```

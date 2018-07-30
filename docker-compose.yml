@@ -13,6 +13,7 @@ services:
       - /home/ubuntu/dkc/web:/usr/share/nginx/html
     ports:
       - 80:80
+      - 81:81
       - 443:443
     links:
       - php:php-address
@@ -52,10 +53,23 @@ services:
     container_name: php-con
     volumes:
       - /home/ubuntu/dkc/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - /home/ubuntu/dkc/php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - /home/ubuntu/dkc/web:/usr/share/nginx/html
     ports:
       - 9000:9000
     depends_on:
       - mysql
     image: php-img-farwish:7.1.19-fpm
+
+  composer:
+    build:
+      context: ./composer
+      dockerfile: Dockerfile
+    container_name: composer-con
+    volumes:
+      - /tmp:/tmp                       # 官方 image 将/tmp作为安装目录,这里做个映射
+      - /home/ubuntu/dkc/web:/usr/share/nginx/html
+    depends_on:
+      - php
+    image: composer-img-farwish:1.6
 

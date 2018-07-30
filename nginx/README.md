@@ -4,7 +4,21 @@
 
 1.nginx.conf
 
-2.default.conf
+修改的配置项:
+```
+http {
+    gzip  on;
+    server_tokens off;
+}
+```
+
+2.conf.d/default.conf
+
+修改的配置项:
+```
+server {
+}
+```
 
 你可以获取到当前使用版本的配置文件，例如:
 ```
@@ -17,5 +31,4 @@ Nginx 配置文件 https://nginx.org/en/docs/http/ngx_http_core_module.html
 ## 进入容器
 
 `docker exec -it nginx-con /bin/bash`  or `docker-compose nginx bash`
-
 

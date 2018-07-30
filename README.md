@@ -5,7 +5,9 @@
 ----- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
 
-## 安装 docker
+## <准备>
+
+### 安装 docker
 
 从 repository 安装
 ```
@@ -18,7 +20,7 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-reposi
 https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
 
 
-## 安装 docker-compose
+### 安装 docker-compose
 
 ```
 $ sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
@@ -28,99 +30,80 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 https://docs.docker.com/compose/install/#install-compose
 
 
-## 几个平常可能使用的脚本
+### 网站目录
 
-* ./compose_remove_all_container.sh # 停止并移除docker-compose启动的容器
-* ./remove_none_name_images.sh # 移除名称为 <none> (即没有名称)的镜像
-* ./start_all_container.sh # 使用 `docker` 命令逐个启动所有容器
-* ./stop_and_remove_all_container.sh # 使用 `docker` 命令逐个停止并删除所有容器
+默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。
 
-
-## 网站项目目录
-
-默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后你可以放置在任何地方。
-
-当然使用软链接也是可以的，把 `web/` 链向实际项目目录。
+当然使用软链接链向实际项目目录也是可以的，比如 `cd /path/to/dkc && ln -s ../so-fw/ web/so-fw`。
 
 
-## 指南
+## <指南>
 
 ### 如何启动所有服务
 
 修改 `docker-composer.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
 ```
-docker-compose up --build [-d]
+dkc up --build [-d]
 ```
 
 
-### 解决Redis的四个WARNING
+### 如何运行 Nginx 静态站点
 
-1.no config file specified, using the default config.
-
-默认已通过在 `docker-compose.yml` 中配置 volume 使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README.md，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
-
-2.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
-
-默认已通过在 `docker-compose.yml` 中配置 sysctls 的选项解除了 WARNING。
-
-3.vm.overcommit_memory is set to 0!
-
-需要你切换至 root，然后按如下设置：
+修改nginx服务 volumes 中 web 目录位于主机内的绝对路径; 修改 ports 需要暴露的端口.
 ```
-$ echo vm.overcommit_memory = 1 >> /etc/sysctl.conf
-$ sysctl vm.overcommit_memory=1
-```
-
-4.you have Transparent Huge Pages (THP) support enabled in your kernel.
-
-需要你切换至 root，然后按如下设置：
-```
-$ echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
-$ source /etc/rc.local
-```
-
-
-### 如何运行Nginx静态站点
-
-```
-# 修改你的 web/ 目录位于主机内的绝对路径.
-
 $ vi docker-compose.yml
-
-- "/path/to/dkc/web:/usr/share/nginx/html"
 ```
 
+修改 nginx 的配置 `nginx/nginx.conf`，`nginx/conf.d/default.conf`
 ```
-# 启动 nginx 服务，及其常用操作
+# 项目路径、暴露端口等配置一般在 nginx/conf.d/default.conf
 
-$ docker-compose up -d nginx
-$
-$ docker-compose stop nginx
-$ docker-compose ps
-$ docker-compose logs -f --tail 10 nginx
-$ docker-compose exec nginx /bin/bash
+$ vi nginx/conf.d/default.conf
+```
+
+常用命令
+```
+# 启动 nginx 服务
+
+$ dkc up -d nginx
+
+# 修改完配置都要重启 nginx 服务
+
+$ dkc restart nginx
+
+# 停止 nginx 服务
+
+$ dkc stop nginx
+
+# 查看 nginx 服务日志
+
+$ dkc logs -f --tail 10 nginx
+
+# 查看所有运行的容器
+
+$ dkc ps
+
+# 进入 nginx 容器
+
+$ dkc exec nginx /bin/bash
 ```
 
 现在可以在浏览器中访问: http://ip
 
-
-### PHP服务
-
-关键之处在于 nginx 配置中要指明 PHP 后端服务的地址: `fastcgi_pass   php-address:9000;`
-
-而 php-address 是在 nginx 服务中配置的 --links 项。
-
-现在可以在浏览器中访问: http://ip/phpinfo.php
+更多内容见 `nginx/README.md`, `nginx/Dockerfile`。
 
 
-### MySQL服务
+### MySQL 服务
 
 ```
 # 启动 MySQL 服务，及其常用操作
 
-$ docker-compose up -d mysql
+$ dkc up -d mysql
+$
 $ docker logs mysql-con
-$ docker-compose exec mysql bash  # equals to: docker exec -it mysql-con bash
+$
+$ dkc exec mysql bash  # 等同: docker exec -it mysql-con bash
+$
 $ mysql -uroot -p
 ```
 
@@ -147,6 +130,59 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 如果启动MySQL容器时带上一个包含数据库的目录，$MYSQL_ROOT_PASSWORD 变量不应该放在命令行中；在任何项目中都该忽略此变量，然后已存在的数据库不会以任何方式改变。
 ```
 
+更多内容见 `mysql/Dockerfile`。
+
+
+### PHP 服务
+
+依赖 MySQL 服务。与 Web Server 配合使用时，关键在于 nginx 配置中要指明 PHP 后端服务的地址为 php-address， `fastcgi_pass   php-address:9000;`
+
+而 php-address 是在 nginx 服务中配置的 --links 项。
+
+现在可以在浏览器中访问: http://ip/phpinfo.php
+
+更多内容见 `php-fpm/README.md`, `php-fpm/Dockerfile`。
+
+
+### Composer 服务
+
+依赖 PHP 服务。composer 的作用是安装 PHP 项目中的第三方库。
+
+更多内容见 `composer/Dockerfile`。
+
+
+### Redis 服务
+
+    *解决四个WARNING*
+
+1.no config file specified, using the default config.
+
+默认已通过在 `docker-compose.yml` 中配置 volume 使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README.md，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
+
+2.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+
+默认已通过在 `docker-compose.yml` 中配置 sysctls 的选项解除了 WARNING。
+
+3.vm.overcommit_memory is set to 0!
+
+需要你切换至 root，然后按如下设置：
+```
+$ echo vm.overcommit_memory = 1 >> /etc/sysctl.conf
+$ sysctl vm.overcommit_memory=1
+```
+
+4.you have Transparent Huge Pages (THP) support enabled in your kernel.
+
+需要你切换至 root，然后按如下设置：
+```
+$ echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
+$ source /etc/rc.local
+```
+
+更多内容见 `redis/README.md`, `redis/Dockerfile`。
+
+
+## <延伸>
 
 ### 使用 COPY 还是 VOLUME
 
@@ -155,6 +191,14 @@ VOLUME 是支持热重载的，而 COPY 需要重新 build。
 VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
 
 移除所有未使用的 volume：`docker volume prune`
+
+
+### 几个平常可能使用的脚本
+
+* ./compose_remove_all_container.sh # 停止并移除docker-compose启动的容器
+* ./remove_none_name_images.sh # 移除名称为 <none> (即没有名称)的镜像
+* ./start_all_container.sh # 使用 `docker` 命令逐个启动所有容器
+* ./stop_and_remove_all_container.sh # 使用 `docker` 命令逐个停止并删除所有容器
 
 
 ### 系列文章
