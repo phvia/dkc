@@ -1,8 +1,8 @@
 # dkc
 
-用 docker-compose 加速构建PHP环境.
+用 docker-compose 快速构建(PHP)环境.
 
------ dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
+-- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
 
 ## <准备>
@@ -167,7 +167,7 @@ $ dkc ps
 
 1.no config file specified, using the default config.
 
-默认已通过在 `docker-compose.yml` 中配置 volume 使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README.md，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
+默认已通过在 `redis/Dockerfile` 中使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
 
 2.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
 
