@@ -1,4 +1,13 @@
-FROM mysql:5.7.22
+##
+# mysql/Dockerfile
+#
+# @license Apache-2.0
+# @maintainer <github.com/farwish>
+##
+
+ARG MYSQL_VERSION
+
+FROM mysql:${MYSQL_VERSION}
 
 #mysql_1  | 2018-07-05T09:49:39.851911Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
 #mysql_1  | 2018-07-05T09:49:40.008181Z 0 [Warning] InnoDB: New log files created, LSN=45790

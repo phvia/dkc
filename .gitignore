@@ -1,1 +1,5 @@
+# project directory
 web/*
+
+# runtime configure
+.env

@@ -30,7 +30,15 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 https://docs.docker.com/compose/install/#install-compose
 
 
-### 网站目录
+### 下载项目初始化
+
+```
+$ git clone https://github.com/phvia/dkc
+$ cd dkc/ && cp .env.default .env
+```
+
+
+### 修改网站目录
 
 默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。
 
@@ -94,6 +102,8 @@ $ dkc exec nginx /bin/bash
 
 
 ### MySQL 服务
+
+`docker-compose.yml` ports 选项的主机与容器开放的端口映射关系可以修改，以增加安全性。
 
 ```
 # 启动 MySQL 服务，及其常用操作

@@ -1,3 +1,11 @@
-FROM nginx:1.14.0
+##
+# nginx/Dockerfile
+#
+# @license Apache-2.0
+# @maintainer <github.com/farwish>
+##
 
-#COPY default.conf /etc/nginx/conf.d/
+ARG NGINX_VERSION
+
+FROM nginx:${NGINX_VERSION}
+
