@@ -6,8 +6,9 @@
 # $ dkc config
 # ```
 #
-# @maintainer <github.com/farwish>
 # @license Apache-2.0
+# @maintainer <github.com/farwish>
+# @guide: https://docs.docker.com/compose/compose-file/
 ##
 
 version: '3'
@@ -17,6 +18,8 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
+      args:
+        NGINX_VERSION: ${IMG_NGINX_VERSION}
     container_name: nginx-con
     volumes:
       - /home/ubuntu/dkc/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -29,54 +32,70 @@ services:
       - 443:443
     links:
       - php:php-address
-    image: nginx-img-farwish:1.14.0
+    image: nginx-img-farwish:${IMG_NGINX_VERSION}
 
   mysql:
     build:
       context: ./mysql
       dockerfile: Dockerfile
+      args:
+        MYSQL_VERSION: ${IMG_MYSQL_VERSION}
     container_name: mysql-con
     environment:                        # 相当于命令行中的环境变量 docker run -e KEY=VAL
       MYSQL_ROOT_PASSWORD: '123456'
     volumes:
       - /var/lib/docker/volumes/mysql:/var/lib/mysql
     ports:
-      - 3306:3306
-    image: mysql-img-farwish:5.7.22     # For tag
+      - ${HOST_MYSQL_PORT}:3306
+    image: mysql-img-farwish:${IMG_MYSQL_VERSION}     # For tag
 
   redis:
     build:
       context: ./redis
       dockerfile: Dockerfile
+      args:
+        REDIS_VERSION: ${IMG_REDIS_VERSION}
     container_name: redis-con
     volumes:
       - /var/lib/docker/volumes/redis:/data
     ports:
-      - 6379:6379
+      - ${HOST_REDIS_PORT}:6379
     privileged: true
     sysctls:
       net.core.somaxconn: 1024
-    image: redis-img-farwish:3.2.12
+    image: redis-img-farwish:${IMG_REDIS_VERSION}
 
   php:
     build:
       context: ./php-fpm
       dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
     container_name: php-con
     volumes:
       - /home/ubuntu/dkc/php-fpm/php.ini:/usr/local/etc/php/php.ini
       - /home/ubuntu/dkc/web:/usr/share/nginx/html
     ports:
-      - 9000:9000
+      - ${HOST_PHP_PORT}:9000
     depends_on:
       - mysql
-    image: php-img-farwish:7.1.19-fpm
+    image: php-img-farwish:${IMG_PHP_VERSION}
 
   composer:
-    image: composer:1.6
+    build:
+      context: ./composer
+      dockerfile: Dockerfile
+      args:
+        COMPOSER_VERSION: ${IMG_COMPOSER_VERSION}
     container_name: composer-con
     volumes:
       - /home/ubuntu/dkc/web:/usr/share/nginx/html
-    working_dir: /usr/share/nginx/html/so-fw
-    command: composer install
+
+  #composer:
+    #image: composer:${IMG_COMPOSER_VERSION}
+    #container_name: composer-con
+    #volumes:
+      #- /home/ubuntu/dkc/web:/usr/share/nginx/html
+    #working_dir: /usr/share/nginx/html/so-fw
+    #command: composer install
 

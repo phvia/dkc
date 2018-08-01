@@ -1,4 +1,13 @@
-FROM php:7.1.19-fpm
+##
+# php-fpm/Dockerfile
+#
+# @license Apache-2.0
+# @maintainer <github.com/farwish>
+##
+
+ARG PHP_VERSION
+
+FROM php:${PHP_VERSION}
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -21,12 +30,3 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip \
     && docker-php-ext-install opcache
 
-#COPY php.ini /usr/local/etc/php/
-
-#COPY --from=composer:1.5 /usr/bin/composer /usr/bin/composer
-
-#WORKDIR /usr/share/nginx/html/so-fw
-
-#CMD ["composer", "install"]
-
-#CMD ["mkdir", "-p", "-m", "0777", "var/"]
