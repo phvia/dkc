@@ -95,6 +95,8 @@ $ dkc exec nginx /bin/bash
 
 ### MySQL 服务
 
+`docker-compose.yml` ports 选项的主机与容器开放的端口映射关系可以修改，以增加安全性。
+
 ```
 # 启动 MySQL 服务，及其常用操作
 

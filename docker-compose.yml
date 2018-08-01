@@ -1,3 +1,15 @@
+##
+# docker-compose.yml
+#
+# ```
+# $ alias dkc=docker-compose
+# $ dkc config
+# ```
+#
+# @maintainer <github.com/farwish>
+# @license Apache-2.0
+##
+
 version: '3'
 services:
 
@@ -24,7 +36,7 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     container_name: mysql-con
-    environment:
+    environment:                        # 相当于命令行中的环境变量 docker run -e KEY=VAL
       MYSQL_ROOT_PASSWORD: '123456'
     volumes:
       - /var/lib/docker/volumes/mysql:/var/lib/mysql
