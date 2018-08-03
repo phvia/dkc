@@ -51,7 +51,7 @@ $ cd dkc/ && cp .env.default .env
 
 修改 `docker-compose.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
 ```
-dkc up --build [-d]
+dkc up --build -d
 ```
 
 
@@ -72,28 +72,34 @@ $ vi nginx/conf.d/default.conf
 常用命令
 ```
 # 启动 nginx 服务
+# 等同 docker run nginx:xxx
 
 $ dkc up -d nginx
 
 # 修改完配置都要重启 nginx 服务
+# 等同 docker restart nginx-con
 
 $ dkc restart nginx
 
 # 停止 nginx 服务
+# 等同 docker stop nginx-con
 
 $ dkc stop nginx
 
-# 查看 nginx 服务日志
+# 跟踪查看 nginx 服务日志
+# 等同 docker logs -f nginx-con
 
-$ dkc logs -f --tail 10 nginx
+$ dkc logs -f --tail 20 nginx
 
 # 查看所有运行的容器
+# 等同 docker ps
 
 $ dkc ps
 
 # 进入 nginx 容器
+# 等同 docker exec -it nginx-con bash
 
-$ dkc exec nginx /bin/bash
+$ dkc exec nginx bash
 ```
 
 现在可以在浏览器中访问: http://ip
@@ -110,16 +116,17 @@ $ dkc exec nginx /bin/bash
 
 $ dkc up -d mysql
 $
-$ docker logs mysql-con
+$ dkc logs -f --tail 20 mysql
 $
-$ dkc exec mysql bash  # 等同: docker exec -it mysql-con bash
+$ dkc exec mysql bash
 $
 $ mysql -uroot -p
 ```
 
 使用自定义的 MySQL 配置文件，例如
 ```
-The default configuration for MySQL can be found in /etc/mysql/my.cnf  
+The default configuration for MySQL can be found in /etc/mysql/my.cnf
+
 $ docker run --name mysql-con -v /my/custom:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 -d mysql-img-farwish:v1
 ```
 
