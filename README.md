@@ -51,7 +51,7 @@ $ cd dkc/ && cp .env.default .env
 
 修改 `docker-compose.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
 ```
-dkc up --build -d
+$ dkc up --build -d
 ```
 
 
@@ -165,14 +165,11 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 
 composer 的作用是安装 PHP 项目中的第三方库，注意修改 volumes 项目目录和 working_dir 。
 
+composer 已集成进Web服务，进入容器执行PHP依赖安装以及其它，示例：
 ```
-# 查看日志
-
-$ dkc logs -f --tail 20 composer
-
-# 查看运行状态，最终 composer 为 Exit 0 表示运行完毕
-
-$ dkc ps
+$ dkc exec web bash
+$ composer install -v
+$ ......
 ```
 
 更多内容见 `composer/Dockerfile`。
