@@ -83,21 +83,16 @@ services:
       - mysql
     image: php-img-farwish:${IMG_PHP_VERSION}
 
-  #composer:
-    #build:
-      #context: ./composer
-      #dockerfile: Dockerfile
-      #args:
-        #COMPOSER_VERSION: ${IMG_COMPOSER_VERSION}
-    #container_name: composer-con
-    #volumes:
-      #- ${DKC_AP}/web:${CONTAINER_WEB_AP}
-
-  composer:
-    image: composer:${IMG_COMPOSER_VERSION}
-    container_name: composer-con
+  web:
+    build:
+      context: ./web
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        PROJECT_PATH: ${CONTAINER_PROJECT_AP}
+    container_name: web-con
     volumes:
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
-    working_dir: ${CONTAINER_WEB_AP}/so-fw
-    command: composer install
+    depends_on:
+      - php
+    image: web-img-farwish:${IMG_PHP_VERSION}
 
