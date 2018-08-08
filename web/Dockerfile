@@ -11,8 +11,10 @@ FROM php-img-farwish:${PHP_VERSION}
 
 USER root
 
+# Modify user www-data uid to 1000
 RUN usermod -u 1000 www-data
 
+# --from use .env variable is invalid ! why ?
 COPY --from=composer:1.6 /usr/bin/composer /usr/bin/composer
 
 ARG PROJECT_PATH
