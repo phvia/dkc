@@ -9,15 +9,24 @@
 
 ### 安装 docker
 
-从 repository 安装
+选择1) 从 repository 安装
 ```
-$ wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
+# 支持 Ubuntu 和 CentOS 的安装脚本
+$ sudo wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
+
+# 将普通用户 xxxx 加入 docker 组
+$ sudo usermod -aG docker xxxx
+
+# 退出终端重新登录才拥有 docker 执行权限
 ```
-https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
+@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
 
-或者下载 package 安装
+选择2) 下载 package 安装
 
-https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
+@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
+@address https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/  
+
+用 dpkg 安装完deb包，依然执行上面 2,3 两步.
 
 
 ### 安装 docker-compose
