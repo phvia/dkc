@@ -1,6 +1,11 @@
-# project directory
+# Nginx ssl cert
+nginx/cert/*
+!nginx/cert/.gitkeep
+
+# Project path
 web/*
 !web/Dockerfile
+!web/Dockerfile-fe
 
-# runtime configure
+# Docker-compose runtime configuration file
 .env

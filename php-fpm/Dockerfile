@@ -29,5 +29,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install shmop \
     && docker-php-ext-install sockets \
     && docker-php-ext-install zip \
-    && docker-php-ext-install opcache
-
+    && docker-php-ext-install opcache \
+    && pecl install redis-4.1.1 \
+    && docker-php-ext-enable redis
