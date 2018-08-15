@@ -26,8 +26,9 @@ services:
     volumes:
       - ${DKC_AP}/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ${DKC_AP}/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - /var/log/nginx/:/var/log/nginx/
+      - ${DKC_AP}/nginx/cert:/etc/nginx/cert
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+      - /var/log/nginx/:/var/log/nginx/
     ports:
       - 80:80
       - 81:81
@@ -86,13 +87,28 @@ services:
   web:
     build:
       context: ./web
+      dockerfile: Dockerfile
       args:
         PHP_VERSION: ${IMG_PHP_VERSION}
-        PROJECT_PATH: ${CONTAINER_PROJECT_AP}
+        WEB_PATH: ${CONTAINER_WEB_AP}
     container_name: web-con
     volumes:
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     depends_on:
       - php
     image: web-img-farwish:${IMG_PHP_VERSION}
+
+  fe:
+    build:
+      context: ./web
+      dockerfile: Dockerfile-fe
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
+    container_name: fe-con
+    volumes:
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    depends_on:
+      - php
+    image: fe-img-farwish:10.x
 

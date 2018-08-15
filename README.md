@@ -156,6 +156,18 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 如果启动MySQL容器时带上一个包含数据库的目录，$MYSQL_ROOT_PASSWORD 变量不应该放在命令行中；在任何项目中都该忽略此变量，然后已存在的数据库不会以任何方式改变。
 ```
 
+MYSQL_ROOT_PASSWORD 环境变量用来初始化 root 用户密码, 只在第一次启动时使用.  
+一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改.
+
+MYSQL_DATABASE 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume).
+
+导入本地数据库文件到容器中
+```
+# dkc exec [options] [-e KEY=VAL...] SERVICE COMMAND [ARGS...]
+
+$ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
+```
+
 更多内容见 `mysql/Dockerfile`。
 
 
