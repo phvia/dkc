@@ -1,46 +1,49 @@
 # dkc
 
-用 docker-compose 快速构建(PHP)环境.
+快速构建(LNMP+Node)运行环境.
 
--- dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
+dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
-
-## <准备>
+# 准备
 
 ### 安装 docker
+----
 
-选择1) 从 repository 安装
+**选择1)** 从 repository 安装
+
 ```
-# 支持 Ubuntu 和 CentOS 的安装脚本
+# 1.支持 Ubuntu 和 CentOS 的安装脚本
 $ sudo wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
 
-# 将普通用户 xxxx 加入 docker 组
+# 2.将普通用户 xxxx 加入 docker 组
 $ sudo usermod -aG docker xxxx
 
-# 退出终端重新登录才拥有 docker 执行权限
+# 3.退出终端重新登录才拥有 docker 执行权限
 ```
-@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository  
 
-选择2) 下载 package 安装
+@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
+
+**选择2)** 下载 package 安装
+
+用 dpkg 安装完deb包，依然执行上面 2,3 两步.
 
 @guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
 @address https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/  
 
-用 dpkg 安装完deb包，依然执行上面 2,3 两步.
 
 
 ### 安装 docker-compose
-
+---
 ```
 $ sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-https://docs.docker.com/compose/install/#install-compose
+@guide https://docs.docker.com/compose/install/#install-compose
 
 
 ### 下载项目初始化
-
+---
 ```
 $ git clone https://github.com/phvia/dkc
 $ cd dkc/ && cp .env.default .env
@@ -48,16 +51,16 @@ $ cd dkc/ && cp .env.default .env
 
 
 ### 修改网站目录
-
+---
 默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。
 
 可以拷贝项目目录到 `web/` 中。
 
 
-## <指南>
+# 指南
 
 ### 如何启动所有服务
-
+---
 修改 `docker-compose.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
 ```
 $ dkc up --build -d
@@ -65,7 +68,7 @@ $ dkc up --build -d
 
 
 ### 如何运行 Nginx 静态站点
-
+---
 修改nginx服务 volumes 中 web 目录位于主机内的绝对路径; 修改 ports 需要暴露的端口.
 ```
 $ vi docker-compose.yml
@@ -117,7 +120,7 @@ $ dkc exec nginx bash
 
 
 ### MySQL 服务
-
+---
 `docker-compose.yml` ports 选项的主机与容器开放的端口映射关系可以修改，以增加安全性。
 
 ```
@@ -156,11 +159,6 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 如果启动MySQL容器时带上一个包含数据库的目录，$MYSQL_ROOT_PASSWORD 变量不应该放在命令行中；在任何项目中都该忽略此变量，然后已存在的数据库不会以任何方式改变。
 ```
 
-MYSQL_ROOT_PASSWORD 环境变量用来初始化 root 用户密码, 只在第一次启动时使用.  
-一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改.
-
-MYSQL_DATABASE 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume).
-
 导入本地数据库文件到容器中
 ```
 # dkc exec [options] [-e KEY=VAL...] SERVICE COMMAND [ARGS...]
@@ -168,37 +166,29 @@ MYSQL_DATABASE 设置镜像启动时新建的数据库，同样只生效一次�
 $ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
 ```
 
+`MYSQL_ROOT_PASSWORD` 环境变量用来初始化 root 用户密码, 只在第一次启动时使用.  
+
+一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改.
+
+`MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume).
+
 更多内容见 `mysql/Dockerfile`。
 
 
 ### PHP 服务
-
+---
 依赖 MySQL 服务。与 Web Server 配合使用时，关键在于 nginx 配置中要指明 PHP 后端服务的地址为 php-address， `fastcgi_pass   php-address:9000;`
 
 而 php-address 是在 nginx 服务中配置的 --links 项。
 
-现在可以在浏览器中访问: http://ip/phpinfo.php
+已安装常用扩展以及 Composer，现在可以在浏览器中访问: http://ip/phpinfo.php
 
 更多内容见 `php-fpm/README.md`, `php-fpm/Dockerfile`。
 
 
-### Composer 服务
-
-composer 的作用是安装 PHP 项目中的第三方库，注意修改 volumes 项目目录和 working_dir 。
-
-composer 已集成进Web服务，进入容器执行PHP依赖安装以及其它，示例：
-```
-$ dkc exec web bash
-$ composer install -v
-$ ......
-```
-
-更多内容见 `composer/Dockerfile`。
-
-
 ### Redis 服务
-
-    *解决四个WARNING*
+---
+**解决四个WARNING**
 
 1.no config file specified, using the default config.
 
@@ -227,19 +217,25 @@ $ source /etc/rc.local
 更多内容见 `redis/README.md`, `redis/Dockerfile`。
 
 
-## <延伸>
+# FAQ
 
 ### 使用 COPY 还是 VOLUME
-
+---
 VOLUME 是支持热重载的，而 COPY 需要重新 build。
 
 VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
 
+正式环境建议使用 COPY 拷贝项目到镜像中，避免项目文件更改而影响到运行环境。
+
 移除所有未使用的 volume：`docker volume prune`
+
+### PHP 文件如何连接 MySQL 和 Redis
+---
+配置的 host 填写服务名，port 填写容器中暴露的端口，非主机端口.
 
 
 ### 几个平常可能使用的脚本
-
+---
 * ./compose_remove_all_container.sh # 停止并移除docker-compose启动的容器
 * ./remove_none_name_images.sh # 移除名称为 <none> (即没有名称)的镜像
 * ./start_all_container.sh # 使用 `docker` 命令逐个启动所有容器
@@ -247,6 +243,5 @@ VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
 
 
 ### 系列文章
-
+---
 http://www.cnblogs.com/farwish/tag/Docker/
-
