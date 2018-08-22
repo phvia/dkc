@@ -77,6 +77,7 @@ services:
     container_name: php-con
     volumes:
       - ${DKC_AP}/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ${DKC_AP}/php-fpm/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     ports:
       - ${HOST_PHP_PORT}:9000
