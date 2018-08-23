@@ -3,8 +3,8 @@
 #
 # ```
 # $ alias dkc=docker-compose
-# $ vi .env.default
 # $ cp .env.default .env
+# $ vi .env
 # $ dkc config
 # ```
 #
@@ -17,11 +17,7 @@ version: '3'
 services:
 
   nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-      args:
-        NGINX_VERSION: ${IMG_NGINX_VERSION}
+    image: nginx:${IMG_NGINX_VERSION}
     container_name: nginx-con
     volumes:
       - ${DKC_AP}/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -33,9 +29,8 @@ services:
       - 80:80
       - 81:81
       - 443:443
-    links:
-      - php:php-address
-    image: nginx-img-farwish:${IMG_NGINX_VERSION}
+    depends_on:
+      - php
 
   mysql:
     build:
@@ -63,7 +58,6 @@ services:
       - /var/lib/docker/volumes/redis:/data
     ports:
       - ${HOST_REDIS_PORT}:6379
-    privileged: true
     sysctls:
       net.core.somaxconn: 1024
     image: redis-img-farwish:${IMG_REDIS_VERSION}

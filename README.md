@@ -114,7 +114,7 @@ $ dkc ps
 $ dkc exec nginx bash
 ```
 
-现在可以在浏览器中访问: http://ip
+现在可以在浏览器中访问: http://host-ip
 
 更多内容见 `nginx/README.md`, `nginx/Dockerfile`。
 
@@ -166,53 +166,56 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 $ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
 ```
 
-`MYSQL_ROOT_PASSWORD` 环境变量用来初始化 root 用户密码, 只在第一次启动时使用.  
+`MYSQL_ROOT_PASSWORD` 环境变量用来初始化 root 用户密码, 只在第一次启动时使用。
 
-一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改.
+一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改。
 
-`MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume).
+`MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume)。
 
 更多内容见 `mysql/Dockerfile`。
 
 
 ### PHP 服务
 ---
-依赖 MySQL 服务。与 Web Server 配合使用时，关键在于 nginx 配置中要指明 PHP 后端服务的地址为 php-address， `fastcgi_pass   php-address:9000;`
+依赖 MySQL 服务。与 Web Server 配合使用时，关键在于 nginx 配置中要指明 PHP 后端服务的地址为 php， `fastcgi_pass   php:9000;`
 
-而 php-address 是在 nginx 服务中配置的 --links 项。
+--links 不是必须的，默认服务之间可以通过服务名相互通讯。
 
-已安装常用扩展以及 Composer，现在可以在浏览器中访问: http://ip/phpinfo.php
+--links 的格式是 `SERVICE:ALIAS`，那么使用其它服务的服务名和别名都可以来通讯。
+
+当前已安装常用扩展(比如 phpredis ) 以及 Composer，现在可以在浏览器中访问: http://host-ip/phpinfo.php
 
 更多内容见 `php-fpm/README.md`, `php-fpm/Dockerfile`。
 
 
 ### Redis 服务
 ---
-**解决四个WARNING**
+**需要手动解决前两个WARNING**
 
-1.no config file specified, using the default config.
+1.vm.overcommit_memory is set to 0!
 
-默认已通过在 `redis/Dockerfile` 中使用配置文件 `redis/redis.conf` 解除了 WARNING，详细见子目录内 README，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
-
-2.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
-
-默认已通过在 `docker-compose.yml` 中配置 sysctls 的选项解除了 WARNING。
-
-3.vm.overcommit_memory is set to 0!
-
-需要你切换至 root，然后按如下设置：
+Host 切换至 root，然后按如下设置：
 ```
 $ echo vm.overcommit_memory = 1 >> /etc/sysctl.conf
 $ sysctl vm.overcommit_memory=1
 ```
 
-4.you have Transparent Huge Pages (THP) support enabled in your kernel.
+2.you have Transparent Huge Pages (THP) support enabled in your kernel.
 
-需要你切换至 root，然后按如下设置：
+Host 切换至 root，然后按如下设置：
 ```
+# 注意 rc.local 里面如果有 `exit 0`，要放在它之前.
 $ echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
 $ source /etc/rc.local
 ```
+
+3.no config file specified, using the default config.
+
+已通过在 `redis/Dockerfile` 中使用配置文件 `redis/redis.conf` 解除了 WARNING，你可以修改 `redis/redis.conf` 的配置项满足你的需要。
+
+4.The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+
+已通过在 `docker-compose.yml` 中配置 sysctls 的选项解除了 WARNING。
 
 更多内容见 `redis/README.md`, `redis/Dockerfile`。
 
