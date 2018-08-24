@@ -14,7 +14,7 @@ symbolic-links=0
 character-set-server=utf8
 
 # https://dev.mysql.com/doc/refman/5.7/en/time-zone-support.html
-default-time-zone='PRC'
+default-time-zone='+8:00'
 
 [client]
 # https://dev.mysql.com/doc/refman/5.7/en/charset-configuration.html

@@ -2,7 +2,7 @@
 
 注意当前使用的配置文件是 `mysql.conf.d/mysqld.cnf`.
 
-修改了 server 和 client 的字符集为 utf8，修改了 timezone 为 PRC，验证方式如下：
+修改了 server 和 client 的字符集为 utf8，修改了 timezone 为 '+8:00'，验证方式如下：
 ```
 查看字符集：进入数据库然后输入 \s
 查看时区：进入数据库然后输入 SELECT @@global.time_zone
