@@ -31,6 +31,7 @@ services:
       - 443:443
     depends_on:
       - php
+    restart: on-failure
 
   mysql:
     build:
@@ -43,8 +44,10 @@ services:
       MYSQL_ROOT_PASSWORD: '123456'
     volumes:
       - /var/lib/docker/volumes/mysql:/var/lib/mysql
+      - ${DKC_AP}/mysql/mysql.conf.d:/etc/mysql/mysql.conf.d
     ports:
       - ${HOST_MYSQL_PORT}:3306
+    restart: on-failure
     image: mysql-img-farwish:${IMG_MYSQL_VERSION}     # For tag
 
   redis:
@@ -60,6 +63,7 @@ services:
       - ${HOST_REDIS_PORT}:6379
     sysctls:
       net.core.somaxconn: 1024
+    restart: on-failure
     image: redis-img-farwish:${IMG_REDIS_VERSION}
 
   php:
@@ -77,6 +81,7 @@ services:
       - ${HOST_PHP_PORT}:9000
     depends_on:
       - mysql
+    restart: on-failure
     image: php-img-farwish:${IMG_PHP_VERSION}
 
   web:
@@ -91,6 +96,7 @@ services:
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     depends_on:
       - php
+    restart: on-failure
     image: web-img-farwish:${IMG_PHP_VERSION}
 
   fe:

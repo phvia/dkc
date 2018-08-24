@@ -172,7 +172,7 @@ $ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
 
 `MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume)。
 
-更多内容见 `mysql/Dockerfile`。
+更多内容见 `mysql/README.md`。
 
 
 ### PHP 服务
