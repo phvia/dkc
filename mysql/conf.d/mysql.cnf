@@ -1,1 +1,2 @@
 [mysql]
+default-character-set=utf8
