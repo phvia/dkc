@@ -1,16 +1,51 @@
 # mysql
 
-注意当前使用的配置文件是 `mysql.conf.d/mysqld.cnf`.
-
-修改了 server 和 client 的字符集为 utf8, 修改了 timezone 为 '+8:00' 同 PRC 效果一样，验证方式如下：
+mysqld.cnf 修改项如下：
 ```
-查看字符集：进入数据库然后输入 \s 或者 show variables like 'char%';
-查看时区：进入数据库然后输入 show variables like 'time_zone'; 或者执行 select now() 查看时间;
+# 开启 binary log 日志
+# https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html
+log_bin=mysql-bin
+server_id=1
+port=3306
+
+# 开启慢查询
+# https://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html
+slow_query_log=1
+slow_query_log_file=slow_query.log
+long_query_time=10
+
+# 错误日志
+log-error = /var/log/mysql/error.log
+
+# 单条行数据的大小限制，系统默认是4M，slave_max_allowed_packet 默认是1G.
+# https://dev.mysql.com/doc/refman/5.7/en/replication-features-max-allowed-packet.html
+# https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html
+max_allowed_packet=32M
+
+# 服务器字符集
+# https://dev.mysql.com/doc/refman/5.7/en/charset-server.html
+character-set-server=utf8
+
+# 时区
+# https://dev.mysql.com/doc/refman/5.7/en/time-zone-support.html
+default-time-zone='+8:00'
+```
+
+`dkc restart mysql 使生效`
+
+## FAQ
+
+### 查看服务器系统变量.
+---
+```
+查看log_bin: show variables like '%bin%';
+查看slow_query_log: show variables like '%query%';
+查看log_error: show variables like '%error%';
+查看字符集: \s 或 show variables like 'char%';
+查看时区: show variables like 'time_zone' 或 select now() 查看时间
 ```
 
 所有 Server System Variables 见 `https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html`
-
-## FAQ
 
 ### 字符集设为utf8的具体配置.
 ---
@@ -28,7 +63,7 @@ default-character-set=utf8
 default-character-set=utf8
 ```
 
-### 如果查看和更改某个库的当前字符集.
+### 查看和更改某个库的当前字符集.
 ---
 ```
 @guide https://dev.mysql.com/doc/refman/5.6/en/charset-database.html
