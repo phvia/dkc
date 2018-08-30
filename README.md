@@ -11,6 +11,8 @@ dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker
 
 **选择1)** 从 repository 安装
 
+@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
+
 ```
 # 1.支持 Ubuntu 和 CentOS 的安装脚本
 $ sudo wget https://raw.githubusercontent.com/farwish/delicateShell/master/support/installDockerCE.sh && chmod +x installDockerCE.sh && ./installDockerCE.sh && rm -f installDockerCE.sh
@@ -21,21 +23,20 @@ $ sudo usermod -aG docker xxxx
 # 3.退出终端重新登录才拥有 docker 执行权限
 ```
 
-@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
-
 **选择2)** 下载 package 安装
 
-# 通过 lsb_release -a 查看是不是 xenial，对号选择 package 下载.  
 @address https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/  
-
-```
-# Ubuntu
-sudo dpkg -i /path/to/package.deb
-```
-
 @guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
 
-用 dpkg 安装完deb包，依然执行上面 2,3 两步.
+```
+# 通过 lsb_release -a 查看是不是 xenial，对号选择 package 下载.
+$ wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_18.06.0~ce~3-0~ubuntu_amd64.deb
+
+# Ubuntu
+$ sudo dpkg -i /path/to/package.deb
+
+# 用 dpkg 安装完deb包，依然执行上面 2,3 两步，让普通用户拥有 docker 执行权限.
+```
 
 
 ### 安装 docker-compose
