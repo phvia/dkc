@@ -229,13 +229,15 @@ $ source /etc/rc.local
 
 
 ### Web 服务
+---
 
-后端环境，具体见 `web/README.md`
+后端PHP运行环境，具体见 `web/README.md`
 
 
 ### Fe 服务
+---
 
-前端环境，具体见 `web/README.md`
+前端Node运行环境，具体见 `web/README.md`
 
 
 # FAQ
