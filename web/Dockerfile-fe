@@ -1,6 +1,6 @@
 ARG PHP_VERSION
 
-FROM web-img-farwish:${PHP_VERSION}
+FROM phvia/web:${PHP_VERSION}
 
 USER root
 
