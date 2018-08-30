@@ -25,11 +25,17 @@ $ sudo usermod -aG docker xxxx
 
 **选择2)** 下载 package 安装
 
-用 dpkg 安装完deb包，依然执行上面 2,3 两步.
-
-@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
+# 通过 lsb_release -a 查看是不是 xenial，对号选择 package 下载.  
 @address https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/  
 
+```
+# Ubuntu
+sudo dpkg -i /path/to/package.deb
+```
+
+@guide https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package  
+
+用 dpkg 安装完deb包，依然执行上面 2,3 两步.
 
 
 ### 安装 docker-compose
@@ -47,6 +53,7 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 ```
 $ git clone https://github.com/phvia/dkc
 $ cd dkc/ && cp .env.default .env
+$ vi .env  # 编辑第一行，即本项目所在路径
 ```
 
 
@@ -220,7 +227,24 @@ $ source /etc/rc.local
 更多内容见 `redis/README.md`, `redis/Dockerfile`。
 
 
+### Web 服务
+
+后端环境，具体见 `web/README.md`
+
+
+### Fe 服务
+
+前端环境，具体见 `web/README.md`
+
+
 # FAQ
+
+### phvia/dkc 能用在哪些宿主机环境
+---
+
+在 Ubuntu16.04 上总是能够 build 通过并运行。
+
+其它环境暂时没有测试数据。
 
 ### 使用 COPY 还是 VOLUME
 ---

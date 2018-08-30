@@ -48,7 +48,7 @@ services:
     ports:
       - ${HOST_MYSQL_PORT}:3306
     restart: on-failure
-    image: mysql-img-farwish:${IMG_MYSQL_VERSION}     # For tag
+    image: phvia/mysql:${IMG_MYSQL_VERSION}     # For tag
 
   redis:
     build:
@@ -64,7 +64,7 @@ services:
     sysctls:
       net.core.somaxconn: 1024
     restart: on-failure
-    image: redis-img-farwish:${IMG_REDIS_VERSION}
+    image: phvia/redis:${IMG_REDIS_VERSION}
 
   php:
     build:
@@ -82,7 +82,7 @@ services:
     depends_on:
       - mysql
     restart: on-failure
-    image: php-img-farwish:${IMG_PHP_VERSION}
+    image: phvia/php-fpm:${IMG_PHP_VERSION}
 
   web:
     build:
@@ -97,7 +97,7 @@ services:
     depends_on:
       - php
     restart: on-failure
-    image: web-img-farwish:${IMG_PHP_VERSION}
+    image: phvia/web:${IMG_PHP_VERSION}
 
   fe:
     build:
@@ -111,5 +111,5 @@ services:
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     depends_on:
       - php
-    image: fe-img-farwish:10.x
+    image: phvia/fe:10.x
 

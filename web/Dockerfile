@@ -7,7 +7,7 @@
 
 ARG PHP_VERSION
 
-FROM php-img-farwish:${PHP_VERSION}
+FROM phvia/php-fpm:${PHP_VERSION}
 
 USER root
 
