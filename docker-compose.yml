@@ -20,8 +20,8 @@ services:
     image: nginx:${IMG_NGINX_VERSION}
     container_name: nginx-con
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - ${DKC_AP}/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ${DKC_AP}/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ${DKC_AP}/nginx/cert:/etc/nginx/cert
@@ -45,8 +45,8 @@ services:
     environment:                        # 相当于命令行中的环境变量 docker run -e KEY=VAL
       MYSQL_ROOT_PASSWORD: '123456'
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - /var/lib/docker/volumes/mysql:/var/lib/mysql
       - ${DKC_AP}/mysql/mysql.conf.d:/etc/mysql/mysql.conf.d
     ports:
@@ -62,8 +62,8 @@ services:
         REDIS_VERSION: ${IMG_REDIS_VERSION}
     container_name: redis-con
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - /var/lib/docker/volumes/redis:/data
     ports:
       - ${HOST_REDIS_PORT}:6379
@@ -80,8 +80,8 @@ services:
         PHP_VERSION: ${IMG_PHP_VERSION}
     container_name: php-con
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - ${DKC_AP}/php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ${DKC_AP}/php-fpm/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
@@ -101,8 +101,8 @@ services:
         WEB_PATH: ${CONTAINER_WEB_AP}
     container_name: web-con
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     depends_on:
       - php
@@ -118,8 +118,8 @@ services:
         WEB_PATH: ${CONTAINER_WEB_AP}
     container_name: fe-con
     volumes:
-      - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     depends_on:
       - php
