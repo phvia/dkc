@@ -36,7 +36,7 @@ services:
       - php
     restart: on-failure
     networks:
-      - dkc_net
+      - default_net
 
   mysql:
     build:
@@ -58,7 +58,7 @@ services:
     restart: on-failure
     image: phvia/mysql:${IMG_MYSQL_VERSION}     # For tag
     networks:
-      - dkc_net
+      - default_net
 
   redis:
     build:
@@ -78,7 +78,7 @@ services:
     restart: on-failure
     image: phvia/redis:${IMG_REDIS_VERSION}
     networks:
-      - dkc_net
+      - default_net
 
   php:
     build:
@@ -100,7 +100,7 @@ services:
     restart: on-failure
     image: phvia/php-fpm:${IMG_PHP_VERSION}
     networks:
-      - dkc_net
+      - default_net
 
   web:
     build:
@@ -119,7 +119,7 @@ services:
     restart: on-failure
     image: phvia/web:${IMG_PHP_VERSION}
     networks:
-      - dkc_net
+      - default_net
 
   fe:
     build:
@@ -137,9 +137,9 @@ services:
       - php
     image: phvia/fe:10.x
     networks:
-      - dkc_net
+      - default_net
 
 networks:
-  dkc_net:
+  default_net:
     driver: bridge
 
