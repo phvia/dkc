@@ -14,8 +14,8 @@
 ##
 
 version: '3'
-services:
 
+services:
   nginx:
     image: nginx:${IMG_NGINX_VERSION}
     container_name: nginx-con
@@ -30,10 +30,13 @@ services:
     ports:
       - 80:80
       - 81:81
+      - 82:82
       - 443:443
     depends_on:
       - php
     restart: on-failure
+    networks:
+      - default_net
 
   mysql:
     build:
@@ -43,7 +46,8 @@ services:
         MYSQL_VERSION: ${IMG_MYSQL_VERSION}
     container_name: mysql-con
     environment:                        # 相当于命令行中的环境变量 docker run -e KEY=VAL
-      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ROOT_PASSWORD: ${_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${_MYSQL_DATABASE}
     volumes:
       - /etc/localtime:/etc/localtime
       - ${DKC_AP}/etc/timezone:/etc/timezone
@@ -53,6 +57,8 @@ services:
       - ${HOST_MYSQL_PORT}:3306
     restart: on-failure
     image: phvia/mysql:${IMG_MYSQL_VERSION}     # For tag
+    networks:
+      - default_net
 
   redis:
     build:
@@ -71,6 +77,8 @@ services:
       net.core.somaxconn: 1024
     restart: on-failure
     image: phvia/redis:${IMG_REDIS_VERSION}
+    networks:
+      - default_net
 
   php:
     build:
@@ -91,6 +99,8 @@ services:
       - mysql
     restart: on-failure
     image: phvia/php-fpm:${IMG_PHP_VERSION}
+    networks:
+      - default_net
 
   web:
     build:
@@ -108,6 +118,8 @@ services:
       - php
     restart: on-failure
     image: phvia/web:${IMG_PHP_VERSION}
+    networks:
+      - default_net
 
   fe:
     build:
@@ -124,4 +136,10 @@ services:
     depends_on:
       - php
     image: phvia/fe:10.x
+    networks:
+      - default_net
+
+networks:
+  default_net:
+    driver: bridge
 

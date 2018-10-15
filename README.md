@@ -122,7 +122,7 @@ $ dkc ps
 $ dkc exec nginx bash
 ```
 
-现在可以在浏览器中访问: http://host-ip
+现在可以在浏览器中访问: http://host-ip:port
 
 更多内容见 `nginx/README.md`, `nginx/Dockerfile`。
 
@@ -142,6 +142,23 @@ $ dkc exec mysql bash
 $
 $ mysql -uroot -p
 ```
+
+导入本地数据库文件到容器中
+```
+# dkc exec [options] [-e KEY=VAL...] SERVICE COMMAND [ARGS...]
+
+$ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
+```
+
+`MYSQL_ROOT_PASSWORD` 环境变量用来初始化 root 用户密码, 只在第一次启动时使用。
+
+一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改。
+
+`MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume)。
+
+更多内容见 `mysql/README.md`。
+
+其它：
 
 使用自定义的 MySQL 配置文件，例如
 ```
@@ -167,31 +184,16 @@ docker exec mysql-con sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROO
 如果启动MySQL容器时带上一个包含数据库的目录，$MYSQL_ROOT_PASSWORD 变量不应该放在命令行中；在任何项目中都该忽略此变量，然后已存在的数据库不会以任何方式改变。
 ```
 
-导入本地数据库文件到容器中
-```
-# dkc exec [options] [-e KEY=VAL...] SERVICE COMMAND [ARGS...]
-
-$ dkc exec -T mysql mysql -uroot -p123456 testdb < testdb.sql
-```
-
-`MYSQL_ROOT_PASSWORD` 环境变量用来初始化 root 用户密码, 只在第一次启动时使用。
-
-一旦初始化数据文件后无法再通过设置本变量更改, 需要删除 volume 之后重新启动，或者进入容器中更改。
-
-`MYSQL_DATABASE` 设置镜像启动时新建的数据库，同样只生效一次，只能进容器内更改 (或者删除 volume)。
-
-更多内容见 `mysql/README.md`。
-
 
 ### PHP 服务
 ---
 依赖 MySQL 服务。与 Web Server 配合使用时，关键在于 nginx 配置中要指明 PHP 后端服务的地址为 php， `fastcgi_pass   php:9000;`
 
---links 不是必须的，默认服务之间可以通过服务名相互通讯。
+--links 不是必须的，默认服务之间可以通过服务名相互通讯，因为 network driver 默认使用 bridge，虽然容器间隔离，但是可以通过名称通信。
 
---links 的格式是 `SERVICE:ALIAS`，那么使用其它服务的服务名和别名都可以来通讯。
+--links 的格式是 `SERVICE:ALIAS`，也就是使用其它服务的服务名(SERVICE)和别名(ALIAS)都可以来通讯。
 
-当前已安装常用扩展(比如 phpredis ) 以及 Composer，现在可以在浏览器中访问: http://host-ip/phpinfo.php
+当前已支持常用扩展(比如 pcntl sockets phpredis ...)，现在可以在浏览器中访问: http://host-ip:port/phpinfo.php
 
 更多内容见 `php-fpm/README.md`, `php-fpm/Dockerfile`。
 
@@ -231,13 +233,13 @@ $ source /etc/rc.local
 ### Web 服务
 ---
 
-后端PHP运行环境，具体见 `web/README.md`
+基于PHP服务镜像的PHP程序环境(包含 Composer 与 web项目目录)，具体见 `web/README.md`
 
 
 ### Fe 服务
 ---
 
-前端Node运行环境，具体见 `web/README.md`
+基于Web服务镜像的Node程序环境(包含 nodejs npm webpack vue-cli ...)，具体见 `web/README.md`
 
 
 # FAQ
