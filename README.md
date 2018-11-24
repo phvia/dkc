@@ -69,10 +69,11 @@ $ dkc up -d # 启动所有服务
 
 ### 如何自定义所有服务
 ---
-`dkc up -d` 使用的是 `docker-compose.yml` 文件，如果只是调整 volume/network/configuration，可以修改文件后重新运行命令。  
-（`docker-compose.yml` 里面使用的 image 是基于 `docker-compose-build.yml` 内 build 使用的 Dockerfile 构建好的镜像）  
+`dkc up -d` 使用的是 `docker-compose.yml` 文件，  
+如果只是调整 volume/network/configuration，可以修改文件后重新运行命令。  
+（`docker-compose.yml` 里面使用的 image 是基于 `docker-compose-build.yml` build 项使用的 Dockerfile 构建好的。）  
 
-所以，如果希望修改 Dockerfile 后重新构建，可以通过运行 `dkc -f docker-compose-build.yml up --build -d` 来 build 镜像。
+所以，如果希望修改 Dockerfile 后重新构建，可以通过运行 `dkc -f docker-compose-build.yml up --build -d` 来构建。
 
 
 ### 如何运行 Nginx 静态站点
