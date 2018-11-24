@@ -39,6 +39,11 @@ services:
       - default_net
 
   mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+      args:
+        MYSQL_VERSION: ${IMG_MYSQL_VERSION}
     container_name: mysql-con
     environment:                        # 相当于命令行中的环境变量 docker run -e KEY=VAL
       MYSQL_ROOT_PASSWORD: ${_MYSQL_ROOT_PASSWORD}
@@ -56,6 +61,11 @@ services:
       - default_net
 
   redis:
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
+      args:
+        REDIS_VERSION: ${IMG_REDIS_VERSION}
     container_name: redis-con
     volumes:
       - /etc/localtime:/etc/localtime
@@ -71,6 +81,11 @@ services:
       - default_net
 
   php:
+    build:
+      context: ./php-fpm
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
     container_name: php-con
     volumes:
       - /etc/localtime:/etc/localtime
@@ -88,6 +103,12 @@ services:
       - default_net
 
   web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
     container_name: web-con
     volumes:
       - /etc/localtime:/etc/localtime
@@ -101,6 +122,12 @@ services:
       - default_net
 
   fe:
+    build:
+      context: ./web
+      dockerfile: Dockerfile-fe
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
     container_name: fe-con
     volumes:
       - /etc/localtime:/etc/localtime

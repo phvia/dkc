@@ -1,6 +1,6 @@
 # dkc
 
-快速构建(LNMP+Node)运行环境.
+快速构建(LNMP+Nodejs)运行环境.
 
 dkc 在此作为 docker-compose 的缩写，你可以理解为 `alias dkc=docker-compose`
 
@@ -49,30 +49,30 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 @guide https://docs.docker.com/compose/install/#install-compose
 
 
-### 下载项目初始化
+### 下载项目并初始化
 ---
 ```
 $ git clone https://github.com/phvia/dkc
 $ cd dkc/ && cp .env.default .env
 $ vi .env  # 编辑第一行，即本项目所在路径
+$ dkc up -d # 启动所有服务
 ```
 
-
-### 修改网站目录
+### 网站目录
 ---
-默认您的网站项目代码放置于 `web/`，当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。
+默认您的网站项目代码放置于 `web/`，可以拷贝项目目录到 `web/` 中。
 
-可以拷贝项目目录到 `web/` 中。
+（当然你可以修改 `docker-compose.yml` 中 volume 的映射关系，然后放置在任何地方。）
 
 
 # 指南
 
-### 如何启动所有服务
+### 如何自定义所有服务
 ---
-修改 `docker-compose.yml` volume 配置项中 `dkc/` 在你主机上的正确路径，然后启动所有：
-```
-$ dkc up --build -d
-```
+`dkc up -d` 使用的是 `docker-compose.yml` 文件，如果只是调整 volume/network/configuration，可以修改文件后重新运行命令。  
+（`docker-compose.yml` 里面使用的 image 是基于 `docker-compose-build.yml` 内 build 使用的 Dockerfile 构建好的镜像）  
+
+所以，如果希望修改 Dockerfile 后重新构建，可以通过运行 `dkc -f docker-compose-build.yml up --build -d` 来 build 镜像。
 
 
 ### 如何运行 Nginx 静态站点
