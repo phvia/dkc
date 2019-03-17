@@ -1,0 +1,78 @@
+##
+# docker-compose-custom.yml
+#
+## Just Use the build Section in service below, after that you can edit image in true docker-compose.yml
+# $ dkc -f docker-compose-custom.yml build php
+# $ dkc -f docker-compose-custom.yml build web
+# ```
+#
+# @license Apache-2.0
+# @maintainer <github.com/farwish>
+# @guide: https://docs.docker.com/compose/compose-file/
+##
+
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql-con
+    environment:
+      MYSQL_ROOT_PASSWORD: ${_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${_MYSQL_DATABASE}
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - /var/lib/docker/volumes/mysql:/var/lib/mysql
+      - ${DKC_AP}/mysql/mysql.conf.d:/etc/mysql/mysql.conf.d
+    ports:
+      - ${HOST_MYSQL_PORT}:3306
+    restart: on-failure
+    image: phvia/mysql:${IMG_MYSQL_VERSION}     # For tag
+    networks:
+      - default_net
+
+  php:
+    build:
+      context: ./custom
+      dockerfile: Dockerfile-php
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+    container_name: php-con
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - ${DKC_AP}/custom/php.ini:/usr/local/etc/php/php.ini
+      - ${DKC_AP}/custom/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    ports:
+      - ${HOST_PHP_PORT}:9000
+    depends_on:
+      - mysql
+    restart: on-failure
+    image: phvia/php-fpm-swoole-4.2.13:${IMG_PHP_VERSION}
+    networks:
+      - default_net
+
+  web:
+    build:
+      context: ./custom
+      dockerfile: Dockerfile-web
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
+    container_name: web-con
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - ${DKC_AP}/custom:${CONTAINER_WEB_AP}
+    depends_on:
+      - php
+    restart: on-failure
+    image: phvia/web-swoole-4.2.13:${IMG_PHP_VERSION}
+    networks:
+      - default_net
+
+networks:
+  default_net:
+    driver: bridge
+

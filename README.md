@@ -252,6 +252,21 @@ $ source /etc/rc.local
 
 其它环境暂时没有测试数据。
 
+### How To Custom Image.
+---
+
+Edit docker-compose-custom.yml to build custom image, after that, use the image name in the docker-compose.yml
+
+```
+# Step1.  
+dkc -f docker-compose-custom.yml build php  
+dkc -f docker-compose-custom.yml build web  
+
+# Step2.  
+vi docker-compose.yml  
+dkc up -d --force-recreate  
+```
+
 ### 使用 COPY 还是 VOLUME
 ---
 VOLUME 是支持热重载的，而 COPY 需要重新 build。
