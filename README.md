@@ -277,7 +277,7 @@ VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
 * ./remove_none_name_images.sh # 移除名称为 <none> (即没有名称)的镜像
 * ./stop_and_remove_all_container.sh # 使用 `docker` 命令逐个停止并删除所有容器
 
-### 可用镜像
+### 最新可用镜像
 ---
 
 ```
@@ -285,9 +285,9 @@ $ docker pull phvia/php:7.3.9-fpm
 
 $ docker pull phvia/php:7.3.9-fpm_web
 
-$ docker pull phvia/php:7.3.9-fpm_4.3.9-swoole
+$ docker pull phvia/php:7.3.9-fpm_4.3.5-swoole
 
-$ docker pull phvia/php:7.3.9-fpm_4.3.9-swoole_web
+$ docker pull phvia/php:7.3.9-fpm_4.3.5-swoole_web
 
 $ docker pull phvia/fe:12.x
 
