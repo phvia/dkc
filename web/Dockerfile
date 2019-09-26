@@ -7,7 +7,7 @@
 
 ARG PHP_VERSION
 
-FROM phvia/php-fpm:${PHP_VERSION}
+FROM phvia/php:${PHP_VERSION}
 
 USER root
 
@@ -15,7 +15,7 @@ USER root
 RUN usermod -u 1000 www-data
 
 # --from use .env variable is invalid ! why ?
-COPY --from=composer:1.6 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1.9 /usr/bin/composer /usr/bin/composer
 
 ARG WEB_PATH
 

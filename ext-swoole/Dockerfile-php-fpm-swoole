@@ -1,0 +1,15 @@
+##
+# ext-swoole/Dockerfile
+#
+# @license Apache-2.0
+# @maintainer <github.com/farwish>
+##
+
+ARG PHP_VERSION
+
+FROM phvia/php:${PHP_VERSION}
+
+ARG SWOOLE_VERSION
+
+RUN pecl install ${SWOOLE_VERSION} \
+    && docker-php-ext-enable swoole

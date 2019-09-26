@@ -1,5 +1,9 @@
 # php-fpm
 
+## 重新构建
+
+见 docker-compose-custom.yml
+
 ## 配置文件
 
 1. php.ini
@@ -12,7 +16,5 @@ curl -sS https://raw.githubusercontent.com/php/php-src/php-7.1.19/php.ini-produc
 当前项目中 `php.ini` 修改的配置项有:
 
 ```
-date.timezone = PRC
-
 expose_php = Off
 ```

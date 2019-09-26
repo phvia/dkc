@@ -96,7 +96,7 @@ services:
     depends_on:
       - php
     restart: on-failure
-    image: phvia/web:${IMG_PHP_VERSION}
+    image: phvia/php:${IMG_PHP_VERSION}_web
     networks:
       - default_net
 

@@ -255,17 +255,7 @@ $ source /etc/rc.local
 ### How To Custom Image.
 ---
 
-Edit docker-compose-custom.yml to build custom image, after that, use the image name in the docker-compose.yml
-
-```
-# Step1.  
-dkc -f docker-compose-custom.yml build php  
-dkc -f docker-compose-custom.yml build web  
-
-# Step2.  
-vi docker-compose.yml  
-dkc up -d --force-recreate  
-```
+见 `ext-swoole/README.md` 说明。
 
 ### 使用 COPY 还是 VOLUME
 ---
@@ -284,11 +274,29 @@ VOLUME 需要跟主机挂钩，而 COPY 直接拷贝到容器中。
 
 ### 几个平常可能使用的脚本
 ---
-* ./compose_remove_all_container.sh # 停止并移除docker-compose启动的容器
 * ./remove_none_name_images.sh # 移除名称为 <none> (即没有名称)的镜像
-* ./start_all_container.sh # 使用 `docker` 命令逐个启动所有容器
 * ./stop_and_remove_all_container.sh # 使用 `docker` 命令逐个停止并删除所有容器
 
+### 可用镜像
+---
+
+```
+$ docker pull phvia/php:7.3.9-fpm
+
+$ docker pull phvia/php:7.3.9-fpm_web
+
+$ docker pull phvia/php:7.3.9-fpm_4.3.9-swoole
+
+$ docker pull phvia/php:7.3.9-fpm_4.3.9-swoole_web
+
+$ docker pull phvia/fe:12.x
+
+$ docker pull phvia/redis:3.2.12
+
+$ docker pull phvia/mysql:5.7.22
+```
+
+自定义构建的方式：`dkc -f docker-composer-custom.yml build php-fpm`
 
 ### 系列文章
 ---

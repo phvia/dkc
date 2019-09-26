@@ -15,11 +15,11 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev    \
         libpng-dev             \
         gettext                \
-        libmcrypt-dev          \
+        openssl                \
+        libzip-dev             \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure gettext --with-gettext=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install calendar \
     && docker-php-ext-install exif \

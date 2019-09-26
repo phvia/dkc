@@ -1,14 +1,14 @@
 ARG PHP_VERSION
 
-FROM phvia/web:${PHP_VERSION}
+FROM phvia/php:${PHP_VERSION}_web
 
 USER root
 
 # Integrate  NODE environment
 RUN apt-get update && apt-get install -y gnupg
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get update && apt-get install -y nodejs \
-    && npm install -g webpack && npm install -g vue-cli
+    && npm install -g webpack && npm install -g @vue/cli
 
 ## Run `sudo apt-get install -y nodejs` to install Node.js 10.x and npm
 ## You may also need development tools to build native addons:

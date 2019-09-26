@@ -2,8 +2,11 @@
 # docker-compose-custom.yml
 #
 ## Just Use the build Section in service below, after that you can edit image in true docker-compose.yml
-# $ dkc -f docker-compose-custom.yml build php
-# $ dkc -f docker-compose-custom.yml build web
+# $ dkc -f docker-compose-custom.yml build php-fpm
+# $ dkc -f docker-compose-custom.yml build php-fpm-swoole
+# $ dkc -f docker-compose-custom.yml build php-fpm-web
+# $ dkc -f docker-compose-custom.yml build php-fpm-swoole-web
+# $ dkc -f docker-compose-custom.yml build fe
 # ```
 #
 # @license Apache-2.0
@@ -31,44 +34,97 @@ services:
     networks:
       - default_net
 
-  php:
+  php-fpm:
     build:
-      context: ./custom
-      dockerfile: Dockerfile-php
+      context: ./php-fpm
+      dockerfile: Dockerfile
       args:
         PHP_VERSION: ${IMG_PHP_VERSION}
-    container_name: php-con
+    container_name: php-fpm-con
     volumes:
       - /etc/localtime:/etc/localtime
       - ${DKC_AP}/etc/timezone:/etc/timezone
-      - ${DKC_AP}/custom/php.ini:/usr/local/etc/php/php.ini
-      - ${DKC_AP}/custom/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ${DKC_AP}/web:${CONTAINER_WEB_AP}
     ports:
       - ${HOST_PHP_PORT}:9000
     depends_on:
       - mysql
     restart: on-failure
-    image: phvia/php-fpm-swoole-4.2.13:${IMG_PHP_VERSION}
+    image: phvia/php:${IMG_PHP_VERSION}
     networks:
       - default_net
 
-  web:
+  php-fpm-swoole:
     build:
-      context: ./custom
-      dockerfile: Dockerfile-web
+      context: ./ext-swoole
+      dockerfile: Dockerfile-php-fpm-swoole
       args:
         PHP_VERSION: ${IMG_PHP_VERSION}
-        WEB_PATH: ${CONTAINER_WEB_AP}
-    container_name: web-con
+        SWOOLE_VERSION: ${EXT_SWOOLE_VERSION}
+    container_name: php-fpm-swoole-con
     volumes:
       - /etc/localtime:/etc/localtime
       - ${DKC_AP}/etc/timezone:/etc/timezone
-      - ${DKC_AP}/custom:${CONTAINER_WEB_AP}
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    ports:
+      - ${HOST_PHP_PORT}:9000
     depends_on:
-      - php
+      - mysql
     restart: on-failure
-    image: phvia/web-swoole-4.2.13:${IMG_PHP_VERSION}
+    image: phvia/php:${IMG_PHP_VERSION}_${EXT_SWOOLE_VERSION}
+    networks:
+      - default_net
+
+  php-fpm-web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
+    container_name: php-fpm-web-con
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    ports:
+      - ${HOST_PHP_PORT}:9000
+    restart: on-failure
+    image: phvia/php:${IMG_PHP_VERSION}_web
+    networks:
+      - default_net
+
+  php-fpm-swoole-web:
+    build:
+      context: ./ext-swoole
+      dockerfile: Dockerfile-php-fpm-swoole-web
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        SWOOLE_VERSION: ${EXT_SWOOLE_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
+    container_name: php-fpm-swoole-web-con
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    restart: on-failure
+    image: phvia/php:${IMG_PHP_VERSION}_${EXT_SWOOLE_VERSION}_web
+    networks:
+      - default_net
+
+  fe:
+    build:
+      context: ./web
+      dockerfile: Dockerfile-fe
+      args:
+        PHP_VERSION: ${IMG_PHP_VERSION}
+        WEB_PATH: ${CONTAINER_WEB_AP}
+    container_name: fe-con
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ${DKC_AP}/etc/timezone:/etc/timezone
+      - ${DKC_AP}/web:${CONTAINER_WEB_AP}
+    image: phvia/fe:12.x
     networks:
       - default_net
 
