@@ -285,9 +285,9 @@ $ docker pull phvia/php:7.3.9-fpm
 
 $ docker pull phvia/php:7.3.9-fpm_web
 
-$ docker pull phvia/php:7.3.9-fpm_4.3.5-swoole
+$ docker pull phvia/php:7.3.9-fpm_swoole-4.3.5
 
-$ docker pull phvia/php:7.3.9-fpm_4.3.5-swoole_web
+$ docker pull phvia/php:7.3.9-fpm_swoole-4.3.5_web
 
 $ docker pull phvia/fe:12.x
 
