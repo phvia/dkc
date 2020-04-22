@@ -298,6 +298,26 @@ $ docker pull phvia/mysql:5.7.22
 
 自定义构建的方式：`dkc -f docker-composer-custom.yml build php-fpm`
 
+### 镜像源设置
+
+$ vi /etc/docker/daemon.json
+
+```
+{
+    "registry-mirrors": [
+        "https://docker.mirrors.ustc.edu.cn",
+        "https://registry.docker-cn.com"
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "100m",
+        "max-file": "3"
+    },
+    "max-concurrent-downloads": 10,
+    "max-concurrent-uploads": 10
+}
+```
+
 ### 系列文章
 ---
 http://www.cnblogs.com/farwish/tag/Docker/
